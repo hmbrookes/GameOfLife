@@ -6,18 +6,18 @@ import java.util.Random;
  * @author hmbro
  *
  */
-public class Game implements Cloneable{
+public class Game{
 	
 	Square [][] grid;
 	
 	/**
-	 * Constructor to initialise game with random values
+	 * Constructor to initialise game with specified grid size with random values
 	 */
-	public Game() {
+	public Game(int num) {
 		Random rand = new Random();
-		grid = new Square[3][3];
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3; j++) {
+		grid = new Square[num][num];
+		for(int i = 0; i < num; i++) {
+			for(int j = 0; j < num; j++) {
 				grid[i][j] = new Square(i, j, rand.nextInt(2));
 			}
 		}
@@ -41,9 +41,9 @@ public class Game implements Cloneable{
 	 * @param values
 	 */
 	public Game(Square[][] values) {
-		this.grid = new Square[3][3];
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3; j++) {
+		this.grid = new Square[values.length][values.length];
+		for(int i = 0; i < values.length; i++) {
+			for(int j = 0; j < values.length; j++) {
 				grid[i][j] = values[i][j];
 			}
 		}
@@ -63,7 +63,7 @@ public class Game implements Cloneable{
 			if(y -1 >= 0) {
 				output.add(this.grid[x-1][y-1]);
 			}
-			if(y + 1 < 3) {
+			if(y + 1 < grid.length) {
 				output.add(this.grid[x-1][y+1]);
 			}
 		}
@@ -73,18 +73,18 @@ public class Game implements Cloneable{
 			
 		}
 		
-		if(x + 1 < 3) {
+		if(x + 1 < grid.length) {
 			output.add(this.grid[x+1][y]);
-			if(y + 1 < 3) {
+			if(y + 1 < grid.length) {
 				output.add(this.grid[x+1][y+1]);
 			}
 		}
 		
-		if(y+1 <3) {
+		if(y+1 < grid.length) {
 			output.add(this.grid[x][y+1]);
 		}
 		
-		if(x + 1 < 3 && y - 1 >= 0) {
+		if(x + 1 < grid.length && y - 1 >= 0) {
 			output.add(this.grid[x+1][y-1]);
 		}
 		return output;
@@ -109,8 +109,8 @@ public class Game implements Cloneable{
 	 * Method to print out the current game grid
 	 */
 	public void print() {
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3; j++) {
+		for(int i = 0; i < grid.length; i++) {
+			for(int j = 0; j < grid.length; j++) {
 				System.out.print(grid[i][j]);
 				System.out.print("\t");
 			}
@@ -126,13 +126,20 @@ public class Game implements Cloneable{
 		for(int it = 0; it < iter; it++) {
 			
 			Game oldg = new Game(this.grid);
-			int[][] values = {{0,0,0},{0,0,0},{0,0,0}};
+			
+			
+			int[][] values = new int [grid.length][grid.length];
+			for(int i = 0; i < grid.length; i++) {
+				for(int j = 0; j < grid.length; j++) {
+					values[i][j] = 0;
+				}
+			}
 			Game newg = new Game(values);
 			
 			//code for scenario 0: No iteractions
 			boolean flag = true;
-			for(int i = 0; i < 3; i++) {
-				for(int j = 0; j < 3; j++) {
+			for(int i = 0; i < grid.length; i++) {
+				for(int j = 0; j < grid.length; j++) {
 					if(grid[i][j].value != 0) {
 						flag &= false;
 					}
@@ -145,8 +152,8 @@ public class Game implements Cloneable{
 			}
 			
 			//checking cells and updating new grid
-			for(int i = 0; i < 3; i++) {
-				for(int j = 0; j < 3; j++) {
+			for(int i = 0; i < grid.length; i++) {
+				for(int j = 0; j < grid.length; j++) {
 					
 					//debug
 					/*System.out.println("\nCell:");
@@ -198,6 +205,11 @@ public class Game implements Cloneable{
 		//number of iterations
 		int iter = 5;
 		
+		System.out.println("WELCOME TO CONWAY'S GAME OF LIFE!");
+		System.out.println("1's represent ALIVE CELLS");
+		System.out.println("0's represent DEAD CELLS");
+		System.out.println("========================");
+		
 		//run a specified grid of values
 		System.out.println("The Game being played for Scenario: ");
 		int[][] values = {{0,1,0},{0,1,0},{0,1,0}};
@@ -209,7 +221,7 @@ public class Game implements Cloneable{
 		
 		//run a random grid of values
 		System.out.println("The Game being played for Random Scenario: ");
-		Game game = new Game();
+		Game game = new Game(5);
 		System.out.println("Input State:");
 		game.print();
 		game.run(iter);
